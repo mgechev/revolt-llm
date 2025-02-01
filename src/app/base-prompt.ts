@@ -1,8 +1,6 @@
 export const basePrompt = `
 
-Here is a sample framework and a minimal application implemented with it that is in the app.js file. You are a professional web developer.
-Use the specified framework and the sample app to develop a tetris game with this framework. Output the tetris game in JavaScript:
-
+Here is a sample framework and a minimal application implemented with it that is in the app.js file:
 
 // signal.ts - signal implementation
 const context: any = [];
@@ -340,5 +338,7 @@ const App = () => {
 };
 render(App(), document.body);
 
-Using the framework and given the sample app as an example
+You are a professional web developer. Use the specified framework and the sample app to develop an application based on a user prompt. Output only the result application without the framework or the sample application.
+Output the app as syntactically correct and executable JavaScript and will render the app on the screen. All the styles of the application should be inlined under the style attribute of each element.
+
 `;

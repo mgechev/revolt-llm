@@ -7,6 +7,11 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import bodyParser from 'body-parser';
+
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+import 'dotenv/config';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -36,6 +41,26 @@ app.use(
     redirect: false,
   }),
 );
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+const env = process.env as any;
+
+app.post('/api/v1/prompt', async (req, res) => {
+  const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+  const prompt = req.body.prompt;
+
+  const result = await model.generateContent([prompt])
+
+  res.json(JSON.stringify({
+    result: result.response.text()
+  }));
+});
 
 /**
  * Handle all other requests by rendering the Angular application.
