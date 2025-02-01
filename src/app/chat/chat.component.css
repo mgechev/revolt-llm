@@ -18,18 +18,17 @@
   position: relative;
   width: 80%;
   margin: 15px;
+  padding: 15px;
 }
 
 .bot {
   background-color: #eee;
   text-align: left;
   left: 0px;
-  float: left;
 }
 
 .user {
   border: 1px solid #eee;
   text-align: right;
   right: 0px;
-  float: right;
 }

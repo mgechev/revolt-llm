@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, effect, signal } from '@angular/core';
 import { EditorComponent } from './editor/editor.component';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ChatComponent } from './chat/chat.component';
+import { ChatComponent, Message } from './chat/chat.component';
 
 
 @Component({
@@ -12,7 +11,15 @@ import { ChatComponent } from './chat/chat.component';
   imports: [EditorComponent, MatTabsModule, ChatComponent]
 })
 export class AppComponent {
+  protected messages = signal<Message[]>([]);
+
+  constructor() {
+    effect(() => {
+      console.log(this.messages());
+    });
+  }
+
   handleMessage(message: string) {
-    
+    this.messages.set([...this.messages(), { text: message, sender: 'user', timestamp: Date.now() }]);
   }
 }

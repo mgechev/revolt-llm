@@ -1,10 +1,11 @@
-import { Component, output, signal, Signal } from '@angular/core';
+import { Component, effect, input, output, signal, Signal } from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
 
-interface Message {
+export interface Message {
   text: string;
+  timestamp: number;
   sender: 'user'|'bot';
 }
 
@@ -17,10 +18,16 @@ interface Message {
   providers: []
 })
 export class ChatComponent {
-  protected messages: Signal<Message[]> = signal([]);
+  messages = input<Message[]>([]);
+  message = output<string>();
+
   protected prompt = '';
 
-  message = output<string>();
+  constructor() {
+    effect(() => {
+      console.log(this.messages());
+    });
+  }
 
   sendMessage() {
     this.message.emit(this.prompt);

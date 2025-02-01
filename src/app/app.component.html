@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <app-chat (message)="handleMessage($event)"/>
+  <app-chat (message)="handleMessage($event)" [messages]="messages()"/>
   <mat-tab-group class="result">
     <mat-tab class="editor-tab" label="Code"> <app-editor/> </mat-tab>
     <mat-tab label="Preview"> Content 2 </mat-tab>
