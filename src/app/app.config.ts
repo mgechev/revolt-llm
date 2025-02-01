@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { NgxMonacoEditorConfig, provideMonacoEditor } from 'ngx-monaco-editor-v2';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 const monacoConfig: NgxMonacoEditorConfig = {
   // You can pass cdn url here instead
@@ -13,5 +14,5 @@ const monacoConfig: NgxMonacoEditorConfig = {
 };
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideMonacoEditor(monacoConfig), provideAnimations()]
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideMonacoEditor(monacoConfig), provideAnimations(), provideClientHydration(withEventReplay())]
 };
