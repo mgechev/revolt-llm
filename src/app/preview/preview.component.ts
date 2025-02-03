@@ -13,6 +13,7 @@ export class PreviewComponent {
 
   constructor() {
     effect(() => {
+      console.log('Code changed', this.code());
       injectScript(this.frame().nativeElement, framework, this.code());
     });
   }

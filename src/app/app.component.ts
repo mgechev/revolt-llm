@@ -1,4 +1,4 @@
-import { afterNextRender, Component, effect, inject, Signal, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, effect, inject, Signal, signal, viewChild, WritableSignal } from '@angular/core';
 import { EditorComponent } from './editor/editor.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ChatComponent, Message } from './chat/chat.component';
@@ -14,11 +14,11 @@ import { PreviewComponent } from './preview/preview.component';
 })
 export class AppComponent {
   protected messages = signal<Message[]>([]);
-  protected code: Signal<string> = signal('var a = 42;');
-  protected prompt = '';
+  protected code = signal('');
+  protected editor = viewChild.required<EditorComponent>(EditorComponent);
+  private history: string[] = [];
 
   private chatService = inject(ChatService);
-  protected editor = viewChild.required<EditorComponent>(EditorComponent);
 
   constructor() {
     effect(() => {
@@ -33,10 +33,16 @@ export class AppComponent {
   async handleMessage(message: string) {
     this.messages.set([...this.messages(), { text: signal(message), sender: 'user', timestamp: Date.now() }]);
 
-    this.prompt += `\nUser prompt: ${message}\n`;
-    const response = this.chatService.sendMessage(this.prompt);
+    this.history.push('User prompt: ' + message);
+    const response = this.chatService.sendMessage(this.history.join('\n####################\n'));
 
     this.messages.set([...this.messages(), { text: response.explanation, sender: 'bot', timestamp: Date.now() }]);
-    this.code = response.code;
+    this.code = response.code as WritableSignal<string>;
+    response.promise.then(() => {
+      this.history.push(
+        'Bot response' + response.explanation(),
+        'Bot code' + response.code()
+      )
+    });
   }
 }

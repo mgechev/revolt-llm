@@ -3,7 +3,7 @@
   <mat-tab-group class="result">
     <mat-tab class="editor-tab" label="Code">
       @if (inBrowser()) {
-        <app-editor [code]="code()"/>
+        <app-editor [code]="code()" (change)="code.set($any($event).target.value)" />
       }
     </mat-tab>
     <mat-tab label="Preview">

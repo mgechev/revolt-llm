@@ -10,46 +10,50 @@ export interface ResponseConfig {
   providedIn: 'root'
 })
 export class ChatService {
-  sendMessage(message: string): { code: Signal<string>, explanation: Signal<string> } {
+  sendMessage(message: string): { code: Signal<string>, explanation: Signal<string>, promise: Promise<void> } {
     const code = signal('');
     const explanation = signal('');
     
     let entireText = '';
-    fetch('http://localhost:4200/api/v1/prompt', {
-      method: 'POST',
-      body: JSON.stringify({ prompt: message }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(async response => {
-      const reader = response.body!.getReader();
-      let explanationOver = false;
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
-          break;
+
+    const promise = new Promise<void>(resolve => {
+      fetch('http://localhost:4200/api/v1/prompt', {
+        method: 'POST',
+        body: JSON.stringify({ prompt: message }),
+        headers: {
+          'Content-Type': 'application/json'
         }
-        const valueString = new TextDecoder().decode(value);
-        entireText += valueString;
-        if (!explanationOver && valueString.includes('\n')) {
-          explanationOver = true;
-          const parts = valueString.split('\n');
-          explanation.set(explanation() + parts[0]);
-          code.set(stripMarkdown(parts.slice(1).join('\n')));
-          continue;
+      }).then(async response => {
+        const reader = response.body!.getReader();
+        let explanationOver = false;
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) {
+            break;
+          }
+          const valueString = new TextDecoder().decode(value);
+          entireText += valueString;
+          if (!explanationOver && valueString.includes('\n')) {
+            explanationOver = true;
+            const parts = valueString.split('\n');
+            explanation.set(explanation() + parts[0]);
+            code.set(stripMarkdown(parts.slice(1).join('\n')));
+            continue;
+          }
+          if (!explanationOver) {
+            explanation.set(explanation() + valueString);
+            continue;
+          }
+          if (explanationOver) {
+            code.set(code() + stripMarkdown(valueString));
+            continue;
+          }
         }
-        if (!explanationOver) {
-          explanation.set(explanation() + valueString);
-          continue;
-        }
-        if (explanationOver) {
-          code.set(code() + stripMarkdown(valueString));
-          continue;
-        }
-      }
+        resolve();
+      });
     });
 
-    return { code, explanation };
+    return { code, explanation, promise };
   }
 }
 
