@@ -3,23 +3,20 @@ import {
   createNodeRequestHandler,
   isMainModule,
   writeResponseToNodeResponse,
-} from '@angular/ssr/node';
-import express from 'express';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import bodyParser, { text } from 'body-parser';
-import systemPrompt from './system-prompt';
+} from "@angular/ssr/node";
+import express from "express";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import bodyParser from "body-parser";
 
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-import 'dotenv/config';
+import "dotenv/config";
+import { llm } from "./llm";
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
-const browserDistFolder = resolve(serverDistFolder, '../browser');
+const browserDistFolder = resolve(serverDistFolder, "../browser");
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
-
 
 const env = process.env as any;
 
@@ -40,42 +37,35 @@ const env = process.env as any;
  */
 app.use(
   express.static(browserDistFolder, {
-    maxAge: '1y',
+    maxAge: "1y",
     index: false,
     redirect: false,
-  }),
+  })
 );
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
-app.post('/api/v1/prompt', async (req, res) => {
-  const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", systemInstruction: systemPrompt });
-
-  const prompt = req.body.prompt;
-  console.log(req.body);
-  const result = await model.generateContentStream(prompt);
-
-  for await (const chunk of result.stream) {
-    const chunkText = chunk.text();
-    res.write(chunkText);
+app.post("/api/v1/prompt", async (req, res) => {
+  for await (const chunk of llm(req.body.prompt)) {
+    res.write(chunk);
   }
 
   res.end();
 });
 
-
 /**
  * Handle all other requests by rendering the Angular application.
  */
-app.use('/**', (req, res, next) => {
+app.use("/**", (req, res, next) => {
   angularApp
     .handle(req)
     .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
+      response ? writeResponseToNodeResponse(response, res) : next()
     )
     .catch(next);
 });
@@ -85,7 +75,7 @@ app.use('/**', (req, res, next) => {
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
 if (isMainModule(import.meta.url)) {
-  const port = process.env['PORT'] || 4000;
+  const port = process.env["PORT"] || 4000;
   app.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
