@@ -7,7 +7,8 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import bodyParser from 'body-parser';
+import bodyParser, { text } from 'body-parser';
+import systemPrompt from './system-prompt';
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
@@ -18,6 +19,9 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+
+const env = process.env as any;
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -47,20 +51,22 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-const env = process.env as any;
-
 app.post('/api/v1/prompt', async (req, res) => {
   const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp", systemInstruction: systemPrompt });
 
   const prompt = req.body.prompt;
+  console.log(req.body);
+  const result = await model.generateContentStream(prompt);
 
-  const result = await model.generateContent([prompt])
+  for await (const chunk of result.stream) {
+    const chunkText = chunk.text();
+    res.write(chunkText);
+  }
 
-  res.json(JSON.stringify({
-    result: result.response.text()
-  }));
+  res.end();
 });
+
 
 /**
  * Handle all other requests by rendering the Angular application.

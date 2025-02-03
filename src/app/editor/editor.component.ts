@@ -1,4 +1,4 @@
-import { Component, ElementRef, viewChild } from '@angular/core';
+import { Component, effect, ElementRef, input, model, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import * as monaco from 'monaco-editor';
 import { EditorComponent as MonacoEditorComponent } from 'ngx-monaco-editor-v2';
@@ -15,9 +15,11 @@ export class EditorComponent {
     theme: 'vs-dark',
     language: 'javascript'
   };
-  code = 'var a = 42;'
+  code = model<string>('')
 
-  onInit(a: any) {
-
+  constructor() {
+    effect(() => {
+      console.log(this.code())
+    });
   }
 }

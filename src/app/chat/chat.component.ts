@@ -4,7 +4,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormsModule} from '@angular/forms';
 
 export interface Message {
-  text: string;
+  text: Signal<string>;
   timestamp: number;
   sender: 'user'|'bot';
 }

@@ -1,6 +1,6 @@
 export const framework = `// signal.ts - signal implementation
 const context = [];
-export function signal(value) {
+function signal(value) {
     const subscriptions = new Set();
     const read = () => {
         const running = context[context.length - 1];
@@ -25,7 +25,7 @@ function cleanup(running) {
     }
     running.dependencies.clear();
 }
-export function effect(fn) {
+function effect(fn) {
     const execute = () => {
         cleanup(running);
         context.push(running);
@@ -42,20 +42,20 @@ export function effect(fn) {
     };
     execute();
 }
-export const isElement = (node) => {
+const isElement = (node) => {
     return node.name !== undefined;
 };
-export const isDynamicBinding = (binding) => {
+const isDynamicBinding = (binding) => {
     return typeof binding === 'function';
 };
-export const isConditional = (node) => {
+const isConditional = (node) => {
     return node.condition !== undefined;
 };
-export const isIterator = (node) => {
+const isIterator = (node) => {
     return node.collection !== undefined;
 };
 // render.ts - rendering implementation
-export const render = (view, root) => {
+const render = (view, root) => {
     if (isConditional(view)) {
         return renderCondition(view, root);
     }

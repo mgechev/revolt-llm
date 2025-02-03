@@ -1,6 +1,6 @@
 <section class="messages">
   @for (message of messages(); track message) {
-    <div class="message" [class]="{ 'bot': message.sender === 'bot', 'user': message.sender === 'user' }">{{ message.text }}</div>
+    <div class="message" [class]="{ 'bot': message.sender === 'bot', 'user': message.sender === 'user' }">{{ message.text() }}</div>
   }
 </section>
 <mat-form-field class="prompt" (keyup.enter)="sendMessage()">
