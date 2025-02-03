@@ -1,19 +1,18 @@
-import { Component, effect, ElementRef, input, model, output, signal, viewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import * as monaco from 'monaco-editor';
-import { EditorComponent as MonacoEditorComponent } from 'ngx-monaco-editor-v2';
+import { Component, model } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { EditorComponent as MonacoEditorComponent } from "ngx-monaco-editor-v2";
 
 @Component({
-  selector: 'app-editor',
-  templateUrl: './editor.component.html',
-  styleUrl: './editor.component.css',
+  selector: "app-editor",
+  templateUrl: "./editor.component.html",
+  styleUrl: "./editor.component.css",
   standalone: true,
   imports: [MonacoEditorComponent, FormsModule],
 })
 export class EditorComponent {
   options = {
-    theme: 'vs-dark',
-    language: 'javascript'
+    theme: "vs-dark",
+    language: "javascript",
   };
-  code = model<string>('')
+  code = model<string>("");
 }

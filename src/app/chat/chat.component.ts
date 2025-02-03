@@ -1,27 +1,27 @@
-import { Component, effect, input, output, signal, Signal } from '@angular/core';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
+import { Component, effect, input, output, Signal } from "@angular/core";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { FormsModule } from "@angular/forms";
 
 export interface Message {
   text: Signal<string>;
   timestamp: number;
-  sender: 'user'|'bot';
+  sender: "user" | "bot";
 }
 
 @Component({
-  selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrl: './chat.component.css',
+  selector: "app-chat",
+  templateUrl: "./chat.component.html",
+  styleUrl: "./chat.component.css",
   imports: [MatInputModule, FormsModule, MatFormFieldModule],
   standalone: true,
-  providers: []
+  providers: [],
 })
 export class ChatComponent {
   messages = input<Message[]>([]);
   message = output<string>();
 
-  protected prompt = '';
+  protected prompt = "";
 
   constructor() {
     effect(() => {
@@ -31,6 +31,6 @@ export class ChatComponent {
 
   sendMessage() {
     this.message.emit(this.prompt);
-    this.prompt = '';
+    this.prompt = "";
   }
 }
