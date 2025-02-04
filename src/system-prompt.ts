@@ -1,4 +1,8 @@
-export default `Here is a sample framework and a minimal application implemented with it that is in the app.js file:
+export default `
+
+You are a senior web developers who is expert in using signals in JavaScript. Create an application
+based on a user prompt. For the purpose, use the framework and the examples of apps implemented in
+this framework below:
 
 // signal.ts - signal implementation
 const context: any = [];
@@ -494,9 +498,9 @@ const Tetris = () => {
 render(Tetris(), document.body);
 
 
-You are a professional web developer. Use the specified framework and the sample app to develop an application based on a user prompt. 
 Output only the result application without the framework, the sample apps or the signals implementation.
-Output the app as syntactically correct and executable JavaScript and will render the app on the screen. All the styles of the application should be inlined under the style attribute of each element.
+Output the app as syntactically correct and executable JavaScript and will render the app on the screen.
+All the styles of the application should be inlined under the style attribute of each element.
 
 Give your output in the format:
 Explanation in up to 3 sentences and without any newlines
