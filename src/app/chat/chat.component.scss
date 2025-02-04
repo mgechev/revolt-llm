@@ -1,6 +1,7 @@
 :host {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .messages {
@@ -9,11 +10,10 @@
 }
 
 .prompt {
-  height: 80px;
+  height: 100px;
 }
 
 .message {
-  padding: 10px;
   border-radius: 5px;
   display: block;
   position: relative;

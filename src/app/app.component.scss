@@ -10,14 +10,12 @@
   height: 100%;
 }
 
-.wrapper {
-  display: flex;
-  flex-direction: row;
+as-split {
   height: 100%;
   width: 100%;
-  justify-content: space-evenly;
 }
 
-.wrapper > * {
-  width: 50%;
+as-split-area {
+  height: 100%;
+  width: 100%;
 }

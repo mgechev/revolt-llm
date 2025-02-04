@@ -9,6 +9,7 @@ import { framework } from "./framework";
 })
 export class PreviewComponent {
   code = input<string>("");
+  pointerEvents = input<"auto" | "none">("auto");
   frame = viewChild.required<ElementRef<HTMLIFrameElement>>("frame");
 
   constructor() {

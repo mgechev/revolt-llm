@@ -11,8 +11,10 @@ import { EditorComponent as MonacoEditorComponent } from "ngx-monaco-editor-v2";
 })
 export class EditorComponent {
   options = {
-    theme: "vs-dark",
+    theme: "vs-light",
     language: "javascript",
+    automaticLayout: true,
+    fontSize: 14
   };
   code = model<string>("");
 }
