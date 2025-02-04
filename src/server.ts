@@ -40,14 +40,14 @@ app.use(
     maxAge: "1y",
     index: false,
     redirect: false,
-  })
+  }),
 );
 
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true,
-  })
+  }),
 );
 
 app.post("/api/v1/prompt", async (req, res) => {
@@ -65,7 +65,7 @@ app.use("/**", (req, res, next) => {
   angularApp
     .handle(req)
     .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next()
+      response ? writeResponseToNodeResponse(response, res) : next(),
     )
     .catch(next);
 });

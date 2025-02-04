@@ -1,20 +1,28 @@
-import { afterNextRender, Component, effect, inject, Signal, signal, viewChild, WritableSignal } from '@angular/core';
-import { EditorComponent } from './editor/editor.component';
-import { MatTabsModule } from '@angular/material/tabs';
-import { ChatComponent, Message } from './chat/chat.component';
-import { ChatService } from './chat.service';
-import { PreviewComponent } from './preview/preview.component';
-
+import {
+  afterNextRender,
+  Component,
+  effect,
+  inject,
+  Signal,
+  signal,
+  viewChild,
+  WritableSignal,
+} from "@angular/core";
+import { EditorComponent } from "./editor/editor.component";
+import { MatTabsModule } from "@angular/material/tabs";
+import { ChatComponent, Message } from "./chat/chat.component";
+import { ChatService } from "./chat.service";
+import { PreviewComponent } from "./preview/preview.component";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
-  imports: [EditorComponent, MatTabsModule, ChatComponent, PreviewComponent]
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrl: "./app.component.css",
+  imports: [EditorComponent, MatTabsModule, ChatComponent, PreviewComponent],
 })
 export class AppComponent {
   protected messages = signal<Message[]>([]);
-  protected code = signal('');
+  protected code = signal("");
   protected editor = viewChild.required<EditorComponent>(EditorComponent);
   private history: string[] = [];
 
@@ -22,27 +30,35 @@ export class AppComponent {
 
   constructor() {
     effect(() => {
-      console.log('Code changed', this.code());
+      console.log("Code changed", this.code());
     });
   }
 
   inBrowser() {
-    return typeof window !== 'undefined';
+    return typeof window !== "undefined";
   }
 
   async handleMessage(message: string) {
-    this.messages.set([...this.messages(), { text: signal(message), sender: 'user', timestamp: Date.now() }]);
+    this.messages.set([
+      ...this.messages(),
+      { text: signal(message), sender: "user", timestamp: Date.now() },
+    ]);
 
-    this.history.push('User prompt: ' + message);
-    const response = this.chatService.sendMessage(this.history.join('\n####################\n'));
+    this.history.push("User prompt: " + message);
+    const response = this.chatService.sendMessage(
+      this.history.join("\n####################\n"),
+    );
 
-    this.messages.set([...this.messages(), { text: response.explanation, sender: 'bot', timestamp: Date.now() }]);
+    this.messages.set([
+      ...this.messages(),
+      { text: response.explanation, sender: "bot", timestamp: Date.now() },
+    ]);
     this.code = response.code as WritableSignal<string>;
     response.promise.then(() => {
       this.history.push(
-        'Bot response' + response.explanation(),
-        'Bot code' + response.code()
-      )
+        "Bot response" + response.explanation(),
+        "Bot code" + response.code(),
+      );
     });
   }
 }

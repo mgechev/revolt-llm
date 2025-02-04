@@ -1,4 +1,12 @@
-import { Component, effect, ElementRef, input, output, Signal, viewChild } from "@angular/core";
+import {
+  Component,
+  effect,
+  ElementRef,
+  input,
+  output,
+  Signal,
+  viewChild,
+} from "@angular/core";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule } from "@angular/forms";
