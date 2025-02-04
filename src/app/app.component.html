@@ -8,7 +8,7 @@
         @if (inBrowser()) {
           <app-editor
             [code]="code()"
-            (change)="code.set($any($event).target.value)"
+            (codeUpdate)="code.set($event)"
           />
         }
       </mat-tab>

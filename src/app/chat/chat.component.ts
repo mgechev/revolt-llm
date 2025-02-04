@@ -35,8 +35,10 @@ export class ChatComponent {
   constructor() {
     effect(() => {
       this.messages();
-      this.container().nativeElement.scrollTop =
-        this.container().nativeElement.scrollHeight;
+      requestAnimationFrame(() => {
+        this.container().nativeElement.scrollTop =
+          this.container().nativeElement.scrollHeight;
+      });
     });
   }
 

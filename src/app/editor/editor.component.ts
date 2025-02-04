@@ -1,4 +1,4 @@
-import { Component, model } from "@angular/core";
+import { Component, model, output, viewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { EditorComponent as MonacoEditorComponent } from "ngx-monaco-editor-v2";
 
@@ -17,4 +17,10 @@ export class EditorComponent {
     fontSize: 14
   };
   code = model<string>("");
+  codeUpdate = output<string>();
+  editor = viewChild.required<MonacoEditorComponent>(MonacoEditorComponent);
+
+  codeChanged() {
+    this.codeUpdate.emit(this.code());
+  }
 }
