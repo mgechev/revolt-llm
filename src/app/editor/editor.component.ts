@@ -17,10 +17,4 @@ export class EditorComponent {
     fontSize: 14
   };
   code = model<string>("");
-  codeUpdate = output<string>();
-  editor = viewChild.required<MonacoEditorComponent>(MonacoEditorComponent);
-
-  codeChanged() {
-    this.codeUpdate.emit(this.code());
-  }
 }

@@ -1,7 +1,6 @@
 import {
   Component,
   effect,
-  ElementRef,
   inject,
   signal,
   viewChild,
@@ -31,10 +30,10 @@ export class AppComponent {
   protected messages = signal<Message[]>([]);
   protected code = signal("");
   protected editor = viewChild.required<EditorComponent>(EditorComponent);
-  private history: string[] = [];
   protected dragging = false;
 
   private chatService = inject(ChatService);
+  private history: string[] = [];
 
   constructor() {
     effect(() => {
