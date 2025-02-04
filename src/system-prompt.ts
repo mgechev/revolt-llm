@@ -334,7 +334,165 @@ const App = () => {
         },
     };
 };
-render(App(), document.body);
+
+
+const Tetris = () => {
+  const board = signal(Array(20).fill().map(() => Array(10).fill(0)));
+  const piece = signal({ shape: [[1]], x: 0, y: -2 });
+  const score = signal(0);
+  const gameOver = signal(false);
+  const shapes = [
+      [[1,1],[1,1]], // square
+      [[0,0,0,0],[1,1,1,1]], // line
+      [[1,1,0],[0,1,1]], // z
+      [[0,1,1],[1,1,0]], // s
+      [[1,0,0],[1,1,1]], // L
+      [[0,0,1],[1,1,1]], // J
+      [[0,1,0],[1,1,1]] // T
+  ];
+  const spawnPiece = () => {
+      const newPiece = { 
+          shape: shapes[Math.floor(Math.random() * shapes.length)], 
+          x: 3, 
+          y: -2
+      };
+      if (checkCollision(newPiece)) {
+          gameOver.set(true);
+          return false;
+      }
+      piece.set(newPiece);
+      return true;
+  };
+  const checkCollision = (p, dx = 0, dy = 0) => {
+      return p.shape.some((row, y) => row.some((cell, x) => {
+          if (!cell) return false;
+          const newX = p.x + x + dx;
+          const newY = p.y + y + dy;
+          return newX < 0 || newX >= 10 || newY >= 20 || 
+                (newY >= 0 && board()[newY]?.[newX]);
+      }));
+  };
+  const mergePiece = () => {
+      const newBoard = board().map(row => [...row]);
+      piece().shape.forEach((row, y) => row.forEach((cell, x) => {
+          const boardY = piece().y + y;
+          if (cell && boardY >= 0) {
+              newBoard[boardY][piece().x + x] = cell;
+          }
+      }));
+      board.set(newBoard);
+      const fullRows = newBoard.reduce((acc, row, i) => 
+          row.every(cell => cell) ? [...acc, i] : acc, []);
+      if (fullRows.length) {
+          const filtered = newBoard.filter((_, i) => !fullRows.includes(i));
+          board.set([
+              ...Array(fullRows.length).fill().map(() => Array(10).fill(0)), 
+              ...filtered
+          ]);
+          score.set(score() + fullRows.length * 100);
+      }
+      spawnPiece();
+  };
+  const moveLeft = () => !checkCollision(piece(), -1) && 
+      piece.set({...piece(), x: piece().x - 1});
+  const moveRight = () => !checkCollision(piece(), 1) && 
+      piece.set({...piece(), x: piece().x + 1});
+  const moveDown = () => {
+      if (!checkCollision(piece(), 0, 1)) {
+          piece.set({...piece(), y: piece().y + 1});
+          return true;
+      }
+      mergePiece();
+      return false;
+  };
+  const rotate = () => {
+      const rotated = piece().shape[0].map((_, i) => 
+          piece().shape.map(row => row[row.length-1-i]));
+      if (!checkCollision({...piece(), shape: rotated})) 
+          piece.set({...piece(), shape: rotated});
+  };
+  const hardDrop = () => {
+      while(moveDown()) {}
+  };
+  const restart = () => {
+      board.set(Array(20).fill().map(() => Array(10).fill(0)));
+      score.set(0);
+      gameOver.set(false);
+      spawnPiece();
+  };
+  window.addEventListener('keydown', e => {
+      if (gameOver()) return;
+      ({
+          'ArrowLeft': moveLeft,
+          'ArrowRight': moveRight,
+          'ArrowDown': moveDown,
+          'ArrowUp': rotate,
+          ' ': hardDrop,
+          'r': restart,
+          'R': restart
+      })[e.key]?.();
+  });
+  spawnPiece();
+  setInterval(() => !gameOver() && moveDown(), 1000);
+  return {
+      name: 'div',
+      attributes: { 
+          style: () => 'display: flex; flex-direction: column; align-items: center; font-family: Arial; background: #f0f0f0; padding: 20px;' 
+      },
+      children: [
+          {
+              name: 'div',
+              children: () => \`Score: \${score()}\`,
+              attributes: { 
+                  style: () => 'font-size: 24px; margin: 20px; font-weight: bold; color: #333;' 
+              }
+          },
+          {
+              name: 'div',
+              attributes: { 
+                  style: () => 'display: grid; grid-template-columns: repeat(10, 30px); gap: 1px; background: #333; padding: 10px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.3);' 
+              },
+              children: [...Array(20)].map((_, y) => [...Array(10)].map((_, x) => ({
+                  name: 'div',
+                  attributes: {
+                      style: () => {
+                          const py = y - piece().y;
+                          const px = x - piece().x;
+                          const isActive = piece().shape[py]?.[px] === 1;
+                          const isFilled = board()[y][x] === 1;
+                          return \`width: 30px; height: 30px; background: \${
+                              isActive ? '#0095DD' : 
+                              isFilled ? '#006699' : '#fff'
+                          }; border-radius: 3px; transition: background 0.1s;\`;
+                      }
+                  }
+              })))
+          },
+          {
+              condition: () => gameOver(),
+              then: {
+                  name: 'div',
+                  children: [
+                      () => 'Game Over!',
+                      {
+                          name: 'button',
+                          children: () => 'Restart',
+                          events: { click: restart },
+                          attributes: { 
+                              style: () => 'margin: 10px; padding: 8px 16px; background: #0095DD; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;' 
+                          }
+                      }
+                  ],
+                  attributes: { 
+                      style: () => 'margin-top: 20px; text-align: center; font-size: 24px; color: #ff4444;' 
+                  }
+              }
+          }
+      ]
+  };
+};
+render(Tetris(), document.body);
+
 
 You are a professional web developer. Use the specified framework and the sample app to develop an application based on a user prompt. 
 Output only the result application without the framework, the sample apps or the signals implementation.

@@ -1,4 +1,4 @@
-<section class="messages">
+<section class="messages" #messagesContainer>
   @for (message of messages(); track message) {
     <div class="message" [class]="{ 'bot': message.sender === 'bot', 'user': message.sender === 'user' }">{{ message.text() }}</div>
   }

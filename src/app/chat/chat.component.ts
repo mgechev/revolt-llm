@@ -1,4 +1,4 @@
-import { Component, effect, input, output, Signal } from "@angular/core";
+import { Component, effect, ElementRef, input, output, Signal, viewChild } from "@angular/core";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule } from "@angular/forms";
@@ -20,12 +20,15 @@ export interface Message {
 export class ChatComponent {
   messages = input<Message[]>([]);
   message = output<string>();
+  container = viewChild.required<ElementRef<HTMLDivElement>>("container");
 
   protected prompt = "";
 
   constructor() {
     effect(() => {
-      console.log(this.messages());
+      this.messages();
+      this.container().nativeElement.scrollTop =
+        this.container().nativeElement.scrollHeight;
     });
   }
 
