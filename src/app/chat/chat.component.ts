@@ -20,7 +20,7 @@ export interface Message {
 @Component({
   selector: "app-chat",
   templateUrl: "./chat.component.html",
-  styleUrl: "./chat.component.css",
+  styleUrl: "./chat.component.scss",
   imports: [MatInputModule, FormsModule, MatFormFieldModule],
   standalone: true,
   providers: [],

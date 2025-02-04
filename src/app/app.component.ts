@@ -17,7 +17,7 @@ import { PreviewComponent } from "./preview/preview.component";
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
-  styleUrl: "./app.component.css",
+  styleUrl: "./app.component.scss",
   imports: [EditorComponent, MatTabsModule, ChatComponent, PreviewComponent],
 })
 export class AppComponent {

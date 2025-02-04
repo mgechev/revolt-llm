@@ -5,7 +5,7 @@ import { framework } from "./framework";
   selector: "app-preview",
   standalone: true,
   templateUrl: "./preview.component.html",
-  styleUrl: "./preview.component.css",
+  styleUrl: "./preview.component.scss",
 })
 export class PreviewComponent {
   code = input<string>("");

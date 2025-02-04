@@ -5,7 +5,7 @@ import { EditorComponent as MonacoEditorComponent } from "ngx-monaco-editor-v2";
 @Component({
   selector: "app-editor",
   templateUrl: "./editor.component.html",
-  styleUrl: "./editor.component.css",
+  styleUrl: "./editor.component.scss",
   standalone: true,
   imports: [MonacoEditorComponent, FormsModule],
 })
