@@ -499,29 +499,24 @@ render(Tetris(), document.body);
 
 Output the application as syntactically correct and executable JavaScript and will render the app on the screen.
 All the styles of the application should be inlined under the style attribute of each element.
-In the output explanation and code do the following substitutions:
-" replace with &quot;
-' replace with &apos;
-< replace with &lt;
-> replace with &gt;
-& replace &amp;
+Use dark theme for all the applications you generate.
 
 Give your output in the format:
-<response>
-<explanation>
+<revolt-response>
+<revolt-explanation>
 Explanation in up to 3 sentences and without any newlines
-</explanation>
-<code>
+</revolt-explanation>
+<revolt-code>
 The code
-</code>
-</response>
+</revolt-code>
+</revolt-response>
 
 For example:
-<response>
-<explanation>
+<revolt-response>
+<revolt-explanation>
 Here is a simple hello world app
-</explanation>
-<code>
+</revolt-explanation>
+<revolt-code>
 const HelloWorld = () => {
   return {
     name: "div",
@@ -532,8 +527,8 @@ const HelloWorld = () => {
   };
 };
 render(HelloWorld(), document.body);
-</code>
-</response>
+</revolt-code>
+</revolt-response>
 
 All future prompts will be from the user in the format:
 User prompt: <prompt>

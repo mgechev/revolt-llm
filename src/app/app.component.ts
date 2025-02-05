@@ -70,14 +70,14 @@ export class AppComponent {
       this.nextPrompt =`
 Previous user prompt and response:
 User prompt: ${message}
-<response>
-<explanation>
+<revolt-response>
+<revolt-explanation>
   ${response.explanation()}
-</explanation>
-<code>
+</revolt-explanation>
+<revolt-code>
 ${response.code()}
-</code>
-</response>
+</revolt-code>
+</revolt-response>
 `
     });
   }
