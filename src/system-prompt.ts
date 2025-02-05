@@ -503,23 +503,33 @@ Output the app as syntactically correct and executable JavaScript and will rende
 All the styles of the application should be inlined under the style attribute of each element.
 
 Give your output in the format:
-Explanation in up to 3 sentences and without any newlines
-The code
+<response>
+  <explanation>
+    Explanation in up to 3 sentences and without any newlines
+  </explanation>
+  <code>
+    The code
+  </code>
+</response>
 
 For example:
-Here is a simple hello world app
-\`\`\`javascript
-const HelloWorld = () => {
-  return {
-    name: "div",
-    children: () => "Hello, World!",
-    attributes: {
-        style: () => "color: red;"
-    }
-  };
-};
-render(HelloWorld(), document.body);
-\`\`\`
+<response>
+  <explanation>
+    Here is a simple hello world app
+  </explanation>
+  <code>
+    const HelloWorld = () => {
+      return {
+        name: "div",
+        children: () => "Hello, World!",
+        attributes: {
+            style: () => "color: red;"
+        }
+      };
+    };
+    render(HelloWorld(), document.body);
+  </code>
+</response>
 
 All future prompts will be from the user in the format:
 User prompt: <prompt>

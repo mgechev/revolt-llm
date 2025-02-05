@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   Component,
   effect,
   ElementRef,
@@ -35,10 +36,8 @@ export class ChatComponent {
   constructor() {
     effect(() => {
       this.messages();
-      requestAnimationFrame(() => {
-        this.container().nativeElement.scrollTop =
-          this.container().nativeElement.scrollHeight;
-      });
+      this.container().nativeElement.scrollTop =
+        this.container().nativeElement.scrollHeight;
     });
   }
 

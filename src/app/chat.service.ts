@@ -1,9 +1,16 @@
 import { Injectable, signal, WritableSignal, Signal } from "@angular/core";
+import { SAXParser } from 'sax';
 
 export interface ResponseConfig {
   explanation: WritableSignal<string>;
   code: WritableSignal<string>;
   explanationOver: boolean;
+}
+
+enum ParsingStage {
+  Code,
+  Explanation,
+  None,
 }
 
 @Injectable({
@@ -18,8 +25,6 @@ export class ChatService {
     const code = signal("");
     const explanation = signal("");
 
-    let entireText = "";
-
     const promise = new Promise<void>((resolve) => {
       fetch("http://localhost:4200/api/v1/prompt", {
         method: "POST",
@@ -29,30 +34,36 @@ export class ChatService {
         },
       }).then(async (response) => {
         const reader = response.body!.getReader();
-        let explanationOver = false;
+        const parser = new SAXParser();
+        let stage = ParsingStage.None;
+
+        parser.onopentag = (tag) => {
+          if (tag.name.toLowerCase() === 'explanation') {
+            stage = ParsingStage.Explanation;
+          } else if (tag.name.toLowerCase() === 'code') {
+            stage = ParsingStage.Code;
+          }
+        };
+        
+        parser.ontext = text => {
+          if (stage === ParsingStage.Explanation) {
+            explanation.set(explanation() + text);
+          } else if (stage === ParsingStage.Code) {
+            code.set(code() + text);
+            console.log(text);
+          }
+        };
+
         while (true) {
           const { value, done } = await reader.read();
           if (done) {
             break;
           }
           const valueString = new TextDecoder().decode(value);
-          entireText += valueString;
-          if (!explanationOver && valueString.includes("\n")) {
-            explanationOver = true;
-            const parts = valueString.split("\n");
-            explanation.set(explanation() + parts[0]);
-            code.set(stripMarkdown(parts.slice(1).join("\n")));
-            continue;
-          }
-          if (!explanationOver) {
-            explanation.set(explanation() + valueString);
-            continue;
-          }
-          if (explanationOver) {
-            code.set(code() + stripMarkdown(valueString));
-            continue;
-          }
+          parser.write(valueString);
+          parser.flush();
         }
+        parser.close();
         resolve();
       });
     });
@@ -60,11 +71,3 @@ export class ChatService {
     return { code, explanation, promise };
   }
 }
-
-const suffix = "```javascript";
-const stripMarkdown = (text: string) => {
-  for (let i = suffix.length - 1; i >= 2; i--) {
-    text = text.replace(suffix.substring(0, i + 1), "");
-  }
-  return text;
-};
