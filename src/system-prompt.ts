@@ -499,6 +499,12 @@ render(Tetris(), document.body);
 
 Output the application as syntactically correct and executable JavaScript and will render the app on the screen.
 All the styles of the application should be inlined under the style attribute of each element.
+In the output explanation and code do the following substitutions:
+" replace with &quot;
+' replace with &apos;
+< replace with &lt;
+> replace with &gt;
+& replace &amp;
 
 Give your output in the format:
 <response>

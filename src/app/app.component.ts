@@ -3,7 +3,6 @@ import {
   effect,
   inject,
   signal,
-  viewChild,
   WritableSignal,
 } from "@angular/core";
 import { EditorComponent } from "./editor/editor.component";
@@ -29,7 +28,6 @@ import { SplitComponent, SplitAreaComponent } from "angular-split";
 export class AppComponent {
   protected messages = signal<Message[]>([]);
   protected code = signal("");
-  protected editor = viewChild.required<EditorComponent>(EditorComponent);
   protected dragging = false;
   private nextPrompt = '';
 
@@ -71,17 +69,16 @@ export class AppComponent {
     response.promise.then(() => {
       this.nextPrompt =`
 Previous user prompt and response:
-  User prompt: ${message}
-  <response>
-  <explanation>
-    ${response.explanation()}
-  </explanation>
-  <code>
-  ${response.code()}
-  </code>
-  </response>
-  `
-        
+User prompt: ${message}
+<response>
+<explanation>
+  ${response.explanation()}
+</explanation>
+<code>
+${response.code()}
+</code>
+</response>
+`
     });
   }
 }

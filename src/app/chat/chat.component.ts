@@ -1,8 +1,7 @@
 import {
-  afterNextRender,
   Component,
-  effect,
   ElementRef,
+  inject,
   input,
   output,
   Signal,
@@ -11,6 +10,7 @@ import {
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule } from "@angular/forms";
+
 
 export interface Message {
   text: Signal<string>;
@@ -24,7 +24,6 @@ export interface Message {
   styleUrl: "./chat.component.scss",
   imports: [MatInputModule, FormsModule, MatFormFieldModule],
   standalone: true,
-  providers: [],
 })
 export class ChatComponent {
   messages = input<Message[]>([]);
@@ -33,16 +32,23 @@ export class ChatComponent {
 
   protected prompt = "";
 
-  constructor() {
-    effect(() => {
-      this.messages();
+  ngAfterViewInit() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const ro = new MutationObserver(() => {
       this.container().nativeElement.scrollTop =
         this.container().nativeElement.scrollHeight;
+    });
+    ro.observe(this.container().nativeElement, {
+      subtree: true,
+      childList: true,
+      characterData: true
     });
   }
 
   sendMessage() {
-    this.message.emit(this.prompt);
+    this.message.emit(this.prompt.trim());
     this.prompt = "";
   }
 }

@@ -13,6 +13,14 @@ enum ParsingStage {
   None,
 }
 
+const entityCharMap: Record<string, string> = {
+  '&quot;': '"',
+  '&apos;': "'",
+  '&lt;': '<',
+  '&gt;': '>',
+  '&amp;': '&',
+};
+
 @Injectable({
   providedIn: "root",
 })
@@ -63,6 +71,8 @@ export class ChatService {
           parser.flush();
         }
         parser.close();
+        code.set(replaceEntities(code()));
+        explanation.set(replaceEntities(explanation()));
         resolve();
       });
     });
@@ -70,3 +80,10 @@ export class ChatService {
     return { code, explanation, promise };
   }
 }
+
+const replaceEntities = (str: string) => {
+  for (const entity in entityCharMap) {
+    str = str.replace(new RegExp(entity, 'g'), entityCharMap[entity]);
+  }
+  return str;
+};
