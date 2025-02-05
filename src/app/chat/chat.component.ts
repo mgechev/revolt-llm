@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   Component,
   ElementRef,
   inject,
@@ -32,18 +33,20 @@ export class ChatComponent {
 
   protected prompt = "";
 
-  ngAfterViewInit() {
-    if (typeof window === 'undefined') {
-      return;
-    }
-    const ro = new MutationObserver(() => {
-      this.container().nativeElement.scrollTop =
-        this.container().nativeElement.scrollHeight;
-    });
-    ro.observe(this.container().nativeElement, {
-      subtree: true,
-      childList: true,
-      characterData: true
+  constructor() {
+    afterNextRender(() => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      const ro = new MutationObserver(() => {
+        this.container().nativeElement.scrollTop =
+          this.container().nativeElement.scrollHeight;
+      });
+      ro.observe(this.container().nativeElement, {
+        subtree: true,
+        childList: true,
+        characterData: true
+      });
     });
   }
 
