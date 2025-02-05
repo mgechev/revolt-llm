@@ -497,38 +497,36 @@ const Tetris = () => {
 };
 render(Tetris(), document.body);
 
-
-Output only the result application without the framework, the sample apps or the signals implementation.
-Output the app as syntactically correct and executable JavaScript and will render the app on the screen.
+Output the application as syntactically correct and executable JavaScript and will render the app on the screen.
 All the styles of the application should be inlined under the style attribute of each element.
 
 Give your output in the format:
 <response>
-  <explanation>
-    Explanation in up to 3 sentences and without any newlines
-  </explanation>
-  <code>
-    The code
-  </code>
+<explanation>
+Explanation in up to 3 sentences and without any newlines
+</explanation>
+<code>
+The code
+</code>
 </response>
 
 For example:
 <response>
-  <explanation>
-    Here is a simple hello world app
-  </explanation>
-  <code>
-    const HelloWorld = () => {
-      return {
-        name: "div",
-        children: () => "Hello, World!",
-        attributes: {
-            style: () => "color: red;"
-        }
-      };
-    };
-    render(HelloWorld(), document.body);
-  </code>
+<explanation>
+Here is a simple hello world app
+</explanation>
+<code>
+const HelloWorld = () => {
+  return {
+    name: "div",
+    children: () => "Hello, World!",
+    attributes: {
+        style: () => "color: red;"
+    }
+  };
+};
+render(HelloWorld(), document.body);
+</code>
 </response>
 
 All future prompts will be from the user in the format:

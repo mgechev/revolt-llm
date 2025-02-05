@@ -50,7 +50,6 @@ export class ChatService {
             explanation.set(explanation() + text);
           } else if (stage === ParsingStage.Code) {
             code.set(code() + text);
-            console.log(text);
           }
         };
 

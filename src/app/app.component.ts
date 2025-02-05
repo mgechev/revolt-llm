@@ -31,9 +31,9 @@ export class AppComponent {
   protected code = signal("");
   protected editor = viewChild.required<EditorComponent>(EditorComponent);
   protected dragging = false;
+  private nextPrompt = '';
 
   private chatService = inject(ChatService);
-  private history: string[] = [];
 
   constructor() {
     effect(() => {
@@ -59,9 +59,8 @@ export class AppComponent {
       { text: signal(message), sender: "user", timestamp: Date.now() },
     ]);
 
-    this.history.push("User prompt: " + message);
     const response = this.chatService.sendMessage(
-      this.history.join("\n####################\n")
+      `${this.nextPrompt}\nUser prompt: ${message}`
     );
 
     this.messages.set([
@@ -70,10 +69,19 @@ export class AppComponent {
     ]);
     this.code = response.code as WritableSignal<string>;
     response.promise.then(() => {
-      this.history.push(
-        "Bot response" + response.explanation(),
-        "Bot code" + response.code()
-      );
+      this.nextPrompt =`
+Previous user prompt and response:
+  User prompt: ${message}
+  <response>
+  <explanation>
+    ${response.explanation()}
+  </explanation>
+  <code>
+  ${response.code()}
+  </code>
+  </response>
+  `
+        
     });
   }
 }
