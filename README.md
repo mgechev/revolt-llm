@@ -1,59 +1,36 @@
-# RevoltPlayground
+# Revolt LLM
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+LLM-based application builder playground with support for Gemini and Claude. The project uses a small, toy framework for creation of the GenAI apps called [revolt](https://github.com/mgechev/revolt).
 
-## Development server
+Revolt has a minimal syntax and is optimized for:
 
-To start a local development server, run:
+- Adding new code easily
+- Fine-grained reactivity
 
-```bash
-ng serve
+## How to use?
+
+1. Create and add tokens to `.env`. Get Gemini token from [AI Studio](https://aistudio.google.com/apikey) and (optionally) Claude token from the Anthropics [console](https://console.anthropic.com/settings/keys).
+
+```
+GEMINI_API_KEY=[Gemini token comes here]
+ANTHROPIC_API_KEY=[Claude token comes here]
+MODEL=[gemini or claude]
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+2. Run the project:
 
 ```bash
-ng generate component component-name
+git clone git@github.com:mgechev/revolt-llm
+cd revolt-llm
+npm i
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+3. Open in the browser! http://localhost:42000
 
-```bash
-ng generate --help
-```
+4. Enjoy!
 
-## Building
+## License
 
-To build the project run:
+MIT
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
