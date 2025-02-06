@@ -36,6 +36,7 @@ export class ChatService {
           const valueString = new TextDecoder().decode(value);
           parser.write(valueString);
         }
+        parser.code.set(stripMarkdown(parser.code()));
         resolve();
       });
     });
@@ -43,6 +44,10 @@ export class ChatService {
     return { code: parser.code, explanation: parser.explanation, promise };
   }
 }
+
+const stripMarkdown = (str: string) => {
+  return str.replace('```javascript', '').replace('```', '');
+};
 
 enum ParsingStage {
   Code,
