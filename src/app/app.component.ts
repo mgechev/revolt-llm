@@ -16,6 +16,7 @@ import { SplitComponent, SplitAreaComponent } from "angular-split";
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",
+  standalone: true,
   imports: [
     EditorComponent,
     MatTabsModule,
