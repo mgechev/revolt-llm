@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: #1B1C1D;
+  color: #eee;
 }
 
 .messages {
@@ -23,13 +25,13 @@
 }
 
 .bot {
-  background-color: #eee;
+  background-color: rgb(35, 35, 35);
   text-align: left;
   left: 0px;
 }
 
 .user {
-  border: 1px solid #eee;
+  background-color: rgb(47, 47, 47);
   text-align: right;
   right: 0px;
 }

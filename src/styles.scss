@@ -1,4 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+@use './_theme-colors.scss';
+
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: dark,
+    ),
+    typography: Roboto,
+    density: 0
+  ));
+}
+
 html,
 body {
   height: 100%;
@@ -10,8 +23,15 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #1B1C1D;
+  color: #fff;
 }
 
 .mat-mdc-tab-body-wrapper {
   flex-grow: 1;
+}
+
+textarea {
+  background-color: #1B1C1D;
+  color: #fff; 
 }

@@ -19,3 +19,11 @@ as-split-area {
   height: 100%;
   width: 100%;
 }
+
+as-split{
+  ::ng-deep {
+    .as-split-gutter-icon {
+      background-color: #505050;
+    }
+  }
+}
