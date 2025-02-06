@@ -24,6 +24,9 @@ import { SplitComponent, SplitAreaComponent } from "angular-split";
     SplitComponent,
     SplitAreaComponent,
   ],
+  host: {
+    ngSkipHydration: 'true'
+  }
 })
 export class AppComponent {
   protected messages = signal<Message[]>([]);

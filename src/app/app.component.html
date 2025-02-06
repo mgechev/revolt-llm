@@ -8,7 +8,7 @@
   </as-split-area>
   <as-split-area [size]="60">
     <mat-tab-group class="result" #resultTabGroup>
-      <mat-tab class="editor-tab" label="Code" ngSkipHydration>
+      <mat-tab class="editor-tab" label="Code">
         @if (inBrowser()) {
           <app-editor [(code)]="code" />
         }
