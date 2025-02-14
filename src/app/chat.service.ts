@@ -19,7 +19,7 @@ export class ChatService {
     const parser = streamingParser();
 
     const promise = new Promise<void>((resolve) => {
-      fetch("http://localhost:4200/api/v1/prompt", {
+      fetch("/api/v1/prompt", {
         method: "POST",
         body: JSON.stringify({ prompt: message, model, apiKey }),
         headers: {
