@@ -7,3 +7,5 @@ dist/
 
 .angular
 .env
+
+/node_modules/
