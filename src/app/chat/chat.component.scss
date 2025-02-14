@@ -1,13 +1,13 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: calc(100% - 50px);
   background: #1B1C1D;
   color: #eee;
 }
 
 .messages {
-  height: calc(100% - 80px);
+  height: 100%;
   overflow: auto;
 }
 

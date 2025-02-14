@@ -2,6 +2,7 @@ import {
   Component,
   effect,
   inject,
+  model,
   signal,
   WritableSignal,
 } from "@angular/core";
@@ -11,6 +12,12 @@ import { ChatComponent, Message } from "./chat/chat.component";
 import { ChatService } from "./chat.service";
 import { PreviewComponent } from "./preview/preview.component";
 import { SplitComponent, SplitAreaComponent } from "angular-split";
+import { MatButtonModule } from "@angular/material/button";
+import { FormsModule } from "@angular/forms";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatDialog } from "@angular/material/dialog";
+import { SettingsDialogComponent } from "./settings/settings.component";
 
 @Component({
   selector: "app-root",
@@ -24,18 +31,26 @@ import { SplitComponent, SplitAreaComponent } from "angular-split";
     PreviewComponent,
     SplitComponent,
     SplitAreaComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
   ],
   host: {
-    ngSkipHydration: 'true'
-  }
+    ngSkipHydration: "true",
+  },
 })
 export class AppComponent {
   protected messages = signal<Message[]>([]);
   protected code = signal("");
   protected dragging = false;
-  private nextPrompt = '';
+  private nextPrompt = "";
 
   private chatService = inject(ChatService);
+
+  readonly apiKey = signal("");
+  readonly model = signal("");
+  readonly dialog = inject(MatDialog);
 
   constructor() {
     effect(() => {
@@ -45,6 +60,20 @@ export class AppComponent {
 
   inBrowser() {
     return typeof window !== "undefined";
+  }
+
+  protected openSettingsDialog(): void {
+    const dialogRef = this.dialog.open(SettingsDialogComponent, {
+      data: { apiKey: this.apiKey(), model: this.model() },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) {
+        return;
+      }
+      this.apiKey.set(result.apiKey);
+      this.model.set(result.model);
+    });
   }
 
   protected onDragStart() {
@@ -71,7 +100,7 @@ export class AppComponent {
     ]);
     this.code = response.code as WritableSignal<string>;
     response.promise.then(() => {
-      this.nextPrompt =`
+      this.nextPrompt = `
 Previous user prompt and response:
 User prompt: ${message}
 <revolt-response>
@@ -82,7 +111,7 @@ User prompt: ${message}
 ${response.code()}
 </revolt-code>
 </revolt-response>
-`
+`;
     });
   }
 }
