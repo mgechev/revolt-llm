@@ -51,7 +51,7 @@ app.use(
 );
 
 app.post("/api/v1/prompt", async (req, res) => {
-  for await (const chunk of llm(req.body.prompt)) {
+  for await (const chunk of llm(req.body.prompt, req.body.model, req.body.apiKey)) {
     res.write(chunk);
   }
 

@@ -91,7 +91,9 @@ export class AppComponent {
     ]);
 
     const response = this.chatService.sendMessage(
-      `${this.nextPrompt}\nUser prompt: ${message}`
+      `${this.nextPrompt}\nUser prompt: ${message}`,
+      this.model(),
+      this.apiKey()
     );
 
     this.messages.set([

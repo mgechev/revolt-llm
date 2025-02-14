@@ -11,7 +11,7 @@ export interface ResponseConfig {
   providedIn: "root",
 })
 export class ChatService {
-  sendMessage(message: string): {
+  sendMessage(message: string, model: string, apiKey: string): {
     code: Signal<string>;
     explanation: Signal<string>;
     promise: Promise<void>;
@@ -21,7 +21,7 @@ export class ChatService {
     const promise = new Promise<void>((resolve) => {
       fetch("http://localhost:4200/api/v1/prompt", {
         method: "POST",
-        body: JSON.stringify({ prompt: message }),
+        body: JSON.stringify({ prompt: message, model, apiKey }),
         headers: {
           "Content-Type": "application/json",
         },

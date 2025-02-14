@@ -5,8 +5,8 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const env = process.env as any;
 
-async function* gemini(prompt: string) {
-  const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
+async function* gemini(prompt: string, apiKey: string) {
+  const genAI = new GoogleGenerativeAI(apiKey ?? env.GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({
     model: "gemini-2.0-flash-exp",
     systemInstruction: systemPrompt,
@@ -18,9 +18,9 @@ async function* gemini(prompt: string) {
   }
 }
 
-async function* claude(prompt: string) {
+async function* claude(prompt: string, apiKey: string) {
   const client = new Anthropic({
-    apiKey: env.ANTHROPIC_API_KEY,
+    apiKey: apiKey ?? env.ANTHROPIC_API_KEY,
   });
 
   const stream = new ReadableStream({
@@ -60,13 +60,15 @@ async function* claude(prompt: string) {
 }
 
 const models = {
-  gemini,
-  claude,
+  'gemini-2.0-flash-exp': gemini,
+  'claude-3-5-sonnet-latest': claude,
 };
 
-export async function* llm(prompt: string) {
-  const model = (models as any)[env.MODEL] ?? gemini;
-  for await (const chunk of model(prompt)) {
+export async function* llm(prompt: string, modelName: string, apiKey: string) {
+  modelName = modelName ?? env.MODEL ?? 'gemini-2.0-flash-exp';
+  console.log('Sending a request to', modelName);
+  const model = (models as any)[modelName ?? env.MODEL];
+  for await (const chunk of model(prompt, apiKey)) {
     yield chunk;
   }
 }
