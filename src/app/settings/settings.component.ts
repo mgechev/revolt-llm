@@ -22,6 +22,7 @@ export interface DialogData {
 @Component({
   selector: 'dialog-overview-example-dialog',
   templateUrl: 'settings.component.html',
+  styleUrl: 'settings.component.scss',
   standalone: true,
   imports: [
     MatFormFieldModule,

@@ -1,8 +1,7 @@
 import {
+  afterNextRender,
   Component,
-  effect,
   inject,
-  model,
   signal,
   WritableSignal,
 } from "@angular/core";
@@ -53,8 +52,10 @@ export class AppComponent {
   readonly dialog = inject(MatDialog);
 
   constructor() {
-    effect(() => {
-      console.log("Code changed", this.code());
+    afterNextRender(() => {
+      if (this.apiKey() === '' || this.model() === '') {
+        this.openSettingsDialog();
+      }
     });
   }
 

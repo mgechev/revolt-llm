@@ -1,16 +1,17 @@
 <h2 mat-dialog-title>Settings</h2>
+<p class="info">Settings are not saved for security purposes. Your API key is only stored in the browser's memory.</p>
 <mat-dialog-content>
-  <mat-form-field>
-    <mat-label>API key</mat-label>
-    <input matInput [(ngModel)]="apiKey" />
-  </mat-form-field>
-  <br>
   <mat-form-field>
     <mat-label>Model</mat-label>
     <mat-select [(ngModel)]="model">
       <mat-option value="gemini-2.0-flash-exp">gemini-2.0-flash-exp</mat-option>
       <mat-option value="claude-3-5-sonnet-latest">claude-3-5-sonnet-latest</mat-option>
     </mat-select>
+  </mat-form-field>
+  <br>
+  <mat-form-field>
+    <mat-label>API key</mat-label>
+    <input matInput [(ngModel)]="apiKey" />
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
