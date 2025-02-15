@@ -64,9 +64,15 @@ const models = {
   'claude-3-5-sonnet-latest': claude,
 };
 
+const defaultAPIKeys: {[key: string]: string} = {
+  'gemini-2.0-flash-exp': env.GEMINI_API_KEY,
+  'claude-3-5-sonnet-latest': env.ANTHROPIC_API_KEY,
+};
+
 export async function* llm(prompt: string, modelName: string, apiKey: string) {
-  modelName = modelName ?? env.MODEL ?? 'gemini-2.0-flash-exp';
-  console.log('Sending a request to', modelName);
+  modelName = modelName || env.MODEL || 'gemini-2.0-flash-exp';
+  apiKey = apiKey || defaultAPIKeys[modelName];
+  console.log(`Sending a request to '${modelName}'`);
   const model = (models as any)[modelName ?? env.MODEL];
   for await (const chunk of model(prompt, apiKey)) {
     yield chunk;
