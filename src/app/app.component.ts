@@ -2,6 +2,7 @@ import {
   afterNextRender,
   Component,
   inject,
+  Signal,
   signal,
   WritableSignal,
 } from "@angular/core";
@@ -47,14 +48,13 @@ export class AppComponent {
 
   private chatService = inject(ChatService);
 
-  readonly apiKey = signal("");
-  readonly model = signal("");
-  readonly framework = signal<'revolt'|'react'>("revolt");
+  readonly settings = getSettings();
+
   readonly dialog = inject(MatDialog);
 
   constructor() {
     afterNextRender(() => {
-      if (this.apiKey() === '' || this.model() === '') {
+      if (this.settings.apiKey() === '' || this.settings.model() === '') {
         this.openSettingsDialog();
       }
     });
@@ -66,16 +66,20 @@ export class AppComponent {
 
   protected openSettingsDialog(): void {
     const dialogRef = this.dialog.open(SettingsDialogComponent, {
-      data: { apiKey: this.apiKey(), model: this.model(), framework: this.framework() },
+      data: { apiKey: this.settings.apiKey(), model: this.settings.model(), framework: this.settings.framework(), save: this.settings.save() },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (!result) {
         return;
       }
-      this.apiKey.set(result.apiKey);
-      this.model.set(result.model);
-      this.framework.set(result.framework);
+      this.settings.apiKey.set(result.apiKey);
+      this.settings.model.set(result.model);
+      this.settings.framework.set(result.framework);
+      this.settings.save.set(result.save);
+      if (this.settings.save()) {
+        saveSettings(this.settings);
+      }
     });
   }
 
@@ -94,10 +98,10 @@ export class AppComponent {
     ]);
 
     const response = this.chatService.sendMessage(
-      this.framework(),
+      this.settings.framework(),
       `${this.nextPrompt}\nUser prompt: ${message}`,
-      this.model(),
-      this.apiKey()
+      this.settings.model(),
+      this.settings.apiKey()
     );
 
     this.messages.set([
@@ -121,3 +125,42 @@ ${response.code()}
     });
   }
 }
+
+interface Settings {
+  apiKey: WritableSignal<string>;
+  model: WritableSignal<string>;
+  framework: WritableSignal<'revolt'|'react'>;
+  save: WritableSignal<boolean>;
+}
+
+
+const saveSettings = (settings: Settings) => {
+  const pojoSettings = {
+    apiKey: settings.apiKey(),
+    model: settings.model(),
+    framework: settings.framework(),
+    save: settings.save()
+  };
+  localStorage.setItem('settings', JSON.stringify(pojoSettings));
+};
+
+const getSettings = (): Settings => {
+  if (typeof localStorage !== 'undefined') {
+    const settingsString = localStorage.getItem('settings');
+    if (settingsString) {
+      const object = JSON.parse(settingsString);
+      return {
+        apiKey: signal(object.apiKey),
+        model: signal(object.model),
+        framework: signal(object.framework),
+        save: signal(object.save)
+      } as Settings;
+    }
+  }
+  return {
+    apiKey: signal(''),
+    model: signal(''),
+    framework: signal('revolt'),
+    save: signal(false)
+  };
+};

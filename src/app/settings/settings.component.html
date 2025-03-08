@@ -21,8 +21,11 @@
       <mat-option value="revolt">Revolt</mat-option>
     </mat-select>
   </mat-form-field>
+  <br>
+  <mat-label>Save to <code>localStorage</code></mat-label>
+  <mat-checkbox [(ngModel)]="save"></mat-checkbox>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="{ apiKey: apiKey(), model: model(), framework: framework() }" cdkFocusInitial>Ok</button>
+  <button mat-button [mat-dialog-close]="{ apiKey: apiKey(), model: model(), framework: framework(), save: save() }" cdkFocusInitial>Ok</button>
 </mat-dialog-actions>

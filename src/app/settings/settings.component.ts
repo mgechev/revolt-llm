@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject, model, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -18,6 +19,7 @@ export interface DialogData {
   apiKey: string;
   model: string;
   framework: string;
+  save: boolean;
 }
 
 @Component({
@@ -34,7 +36,8 @@ export interface DialogData {
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-    MatSelectModule
+    MatSelectModule,
+    MatCheckboxModule
   ],
 })
 export class SettingsDialogComponent {
@@ -43,6 +46,7 @@ export class SettingsDialogComponent {
   readonly apiKey = model(this.data.apiKey);
   readonly model = model(this.data.model);
   readonly framework = model(this.data.framework);
+  readonly save = model(this.data.save);
 
   onNoClick(): void {
     this.dialogRef.close();
