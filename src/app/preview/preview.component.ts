@@ -32,61 +32,64 @@ const runReactApp = (
     return;
   }
 
-  // 1. Wait for the iframe content to load:
   frame.onload = () => {
-    // Or frame.addEventListener('load', () => { ... });
     if (!frame.contentDocument || !frame.contentDocument.body) {
       console.error("Iframe not loaded or body not available.");
       return;
     }
 
-    const appContainer = frame.contentDocument.createElement('div');
-    appContainer.id = 'root';
-    frame.contentDocument.body.appendChild(appContainer);
-
-    const reactScript = frame.contentDocument.createElement("script");
-    reactScript.src = 'https://unpkg.com/react@17/umd/react.development.js';
-    reactScript.crossOrigin = 'crossOrigin';
-
-    const reactDOMScript = frame.contentDocument.createElement("script");
-    reactDOMScript.src = 'https://unpkg.com/react-dom@17/umd/react-dom.development.js';
-    reactDOMScript.crossOrigin = 'crossOrigin';
-
-    const appScript = frame.contentDocument.createElement("script");
-    appScript.text = code;
-    appScript.type = 'text/babel';
-
-    const babelScript = frame.contentDocument.createElement("script");
-    babelScript.src = 'https://unpkg.com/babel-standalone@6/babel.min.js';
-
     while (frame.contentDocument.body.firstChild) {
       frame.contentDocument.body.firstChild.remove();
     }
+
+    const appContainer = frame.contentDocument.createElement('div');
+    appContainer.id = 'root';
+
+    const reactScript = frame.contentDocument.createElement("script");
+    reactScript.src = 'https://unpkg.com/react@17/umd/react.development.js';
+    reactScript.defer = true;
+
+    const reactDOMScript = frame.contentDocument.createElement("script");
+    reactDOMScript.src = 'https://unpkg.com/react-dom@17/umd/react-dom.development.js';
+    reactDOMScript.defer = true;
+
+    const babelScript = frame.contentDocument.createElement("script");
+    babelScript.src = 'https://unpkg.com/@babel/standalone@7.23.7/babel.min.js';
+    babelScript.defer = true;
+
+    const appScript = frame.contentDocument.createElement("script");
+    appScript.text = `
+      (function(){
+        ${code}
+      })();
+    `;
+    appScript.defer = true;
+
+    frame.contentDocument.body.appendChild(appContainer);
     frame.contentDocument.body.appendChild(reactScript);
     frame.contentDocument.body.appendChild(reactDOMScript);
-    frame.contentDocument.body.appendChild(appScript);
     frame.contentDocument.body.appendChild(babelScript);
 
+    reactDOMScript.onload = () => {
+      frame.contentDocument!.body.appendChild(appScript);
+    };
+
     reactScript.onerror = (error) => {
-      console.error("Script injection failed:", error);
+      console.error("React script injection failed:", error);
     };
     reactDOMScript.onerror = (error) => {
-      console.error("Script injection failed:", error);
+      console.error("ReactDOM script injection failed:", error);
     };
     appScript.onerror = (error) => {
-      console.error("Script injection failed:", error);
-    };
-    babelScript.onerror = (error) => {
-      console.error("Script injection failed:", error);
+      console.error("App script injection failed:", error);
     };
   };
 
-  // Handle cases where the iframe might already be loaded.
   if (
     frame.contentDocument &&
     frame.contentDocument.readyState === "complete"
   ) {
-    (frame as any).onload(); // Call the onload handler immediately.
+    (frame as any).onload();
   }
 };
 

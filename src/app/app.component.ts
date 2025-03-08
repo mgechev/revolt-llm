@@ -44,12 +44,12 @@ export class AppComponent {
   protected messages = signal<Message[]>([]);
   protected code = signal("");
   protected dragging = false;
-  private nextPrompt = "";
+  private pastPrompt = "";
 
   private chatService = inject(ChatService);
 
+  private resetHistory = false;
   readonly settings = getSettings();
-
   readonly dialog = inject(MatDialog);
 
   constructor() {
@@ -73,12 +73,17 @@ export class AppComponent {
       if (!result) {
         return;
       }
+      if (this.settings.framework() !== result.framework) {
+        this.resetHistory = true;
+      }
       this.settings.apiKey.set(result.apiKey);
       this.settings.model.set(result.model);
       this.settings.framework.set(result.framework);
       this.settings.save.set(result.save);
       if (this.settings.save()) {
         saveSettings(this.settings);
+      } else {
+        deleteSettings();
       }
     });
   }
@@ -97,9 +102,14 @@ export class AppComponent {
       { text: signal(message), sender: "user", timestamp: Date.now() },
     ]);
 
+    if (this.resetHistory) {
+      this.pastPrompt = '';
+      this.resetHistory = false;
+    }
+
     const response = this.chatService.sendMessage(
       this.settings.framework(),
-      `${this.nextPrompt}\nUser prompt: ${message}`,
+      `${this.pastPrompt}\nUser prompt: ${message}`,
       this.settings.model(),
       this.settings.apiKey()
     );
@@ -110,7 +120,7 @@ export class AppComponent {
     ]);
     this.code = response.code as WritableSignal<string>;
     response.promise.then(() => {
-      this.nextPrompt = `
+      this.pastPrompt = `
 Previous user prompt and response:
 User prompt: ${message}
 <revolt-response>
@@ -163,4 +173,8 @@ const getSettings = (): Settings => {
     framework: signal('revolt'),
     save: signal(false)
   };
+};
+
+const deleteSettings = () => {
+  localStorage.removeItem('settings');
 };

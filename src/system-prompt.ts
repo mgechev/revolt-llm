@@ -542,7 +542,7 @@ based on a user prompt.
 Output the application as syntactically correct and executable JavaScript and will render the app on the screen.
 All the styles of the application should be inlined under the style attribute of each element.
 Use dark theme for all the applications you generate.
-Use React APIs from the React global variable.
+Use React APIs from the React global variable. Use React factory calls instead of JSX.
 
 Give your output in the format:
 <revolt-response>

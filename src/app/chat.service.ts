@@ -21,7 +21,7 @@ export class ChatService {
     const promise = new Promise<void>((resolve) => {
       fetch("/api/v1/prompt", {
         method: "POST",
-        body: JSON.stringify({ prompt: message, model, apiKey }),
+        body: JSON.stringify({ prompt: message, model, apiKey, framework }),
         headers: {
           "Content-Type": "application/json",
         },
