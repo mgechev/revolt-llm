@@ -17,6 +17,7 @@ import {MatSelectModule} from '@angular/material/select';
 export interface DialogData {
   apiKey: string;
   model: string;
+  framework: string;
 }
 
 @Component({
@@ -41,6 +42,7 @@ export class SettingsDialogComponent {
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
   readonly apiKey = model(this.data.apiKey);
   readonly model = model(this.data.model);
+  readonly framework = model(this.data.framework);
 
   onNoClick(): void {
     this.dialogRef.close();

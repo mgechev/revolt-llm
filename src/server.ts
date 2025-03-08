@@ -11,6 +11,7 @@ import bodyParser from "body-parser";
 
 import "dotenv/config";
 import { llm } from "./llm";
+import { react, revolt } from './system-prompt';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, "../browser");
@@ -51,7 +52,8 @@ app.use(
 );
 
 app.post("/api/v1/prompt", async (req, res) => {
-  for await (const chunk of llm(req.body.prompt, req.body.model, req.body.apiKey)) {
+  const isRevolt = req.body.framework === 'revolt';
+  for await (const chunk of llm(isRevolt ? revolt : react, req.body.prompt, req.body.model, req.body.apiKey)) {
     res.write(chunk);
   }
 

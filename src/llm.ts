@@ -1,11 +1,10 @@
-import systemPrompt from "./system-prompt";
 import Anthropic from "@anthropic-ai/sdk";
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const env = process.env as any;
 
-async function* gemini(prompt: string, apiKey: string) {
+async function* gemini(systemPrompt: string, prompt: string, apiKey: string) {
   const genAI = new GoogleGenerativeAI(apiKey ?? env.GEMINI_API_KEY);
   const model = genAI.getGenerativeModel({
     model: "gemini-2.0-flash-exp",
@@ -18,7 +17,7 @@ async function* gemini(prompt: string, apiKey: string) {
   }
 }
 
-async function* claude(prompt: string, apiKey: string) {
+async function* claude(systemPrompt: string, prompt: string, apiKey: string) {
   const client = new Anthropic({
     apiKey: apiKey ?? env.ANTHROPIC_API_KEY,
   });
@@ -69,12 +68,12 @@ const defaultAPIKeys: {[key: string]: string} = {
   'claude-3-5-sonnet-latest': env.ANTHROPIC_API_KEY,
 };
 
-export async function* llm(prompt: string, modelName: string, apiKey: string) {
+export async function* llm(systemPrompt: string, prompt: string, modelName: string, apiKey: string) {
   modelName = modelName || env.MODEL || 'gemini-2.0-flash-exp';
   apiKey = apiKey || defaultAPIKeys[modelName];
   console.log(`Sending a request to '${modelName}'`);
   const model = (models as any)[modelName ?? env.MODEL];
-  for await (const chunk of model(prompt, apiKey)) {
+  for await (const chunk of model(systemPrompt, prompt, apiKey)) {
     yield chunk;
   }
 }

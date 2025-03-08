@@ -13,8 +13,16 @@
     <mat-label>API key</mat-label>
     <input matInput [(ngModel)]="apiKey" />
   </mat-form-field>
+  <br>
+  <mat-form-field>
+    <mat-label>Framework</mat-label>
+    <mat-select [(ngModel)]="framework">
+      <mat-option value="react">React</mat-option>
+      <mat-option value="revolt">Revolt</mat-option>
+    </mat-select>
+  </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="{ apiKey: apiKey(), model: model() }" cdkFocusInitial>Ok</button>
+  <button mat-button [mat-dialog-close]="{ apiKey: apiKey(), model: model(), framework: framework() }" cdkFocusInitial>Ok</button>
 </mat-dialog-actions>

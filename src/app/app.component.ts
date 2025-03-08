@@ -49,6 +49,7 @@ export class AppComponent {
 
   readonly apiKey = signal("");
   readonly model = signal("");
+  readonly framework = signal<'revolt'|'react'>("revolt");
   readonly dialog = inject(MatDialog);
 
   constructor() {
@@ -65,7 +66,7 @@ export class AppComponent {
 
   protected openSettingsDialog(): void {
     const dialogRef = this.dialog.open(SettingsDialogComponent, {
-      data: { apiKey: this.apiKey(), model: this.model() },
+      data: { apiKey: this.apiKey(), model: this.model(), framework: this.framework() },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -74,6 +75,7 @@ export class AppComponent {
       }
       this.apiKey.set(result.apiKey);
       this.model.set(result.model);
+      this.framework.set(result.framework);
     });
   }
 
@@ -92,6 +94,7 @@ export class AppComponent {
     ]);
 
     const response = this.chatService.sendMessage(
+      this.framework(),
       `${this.nextPrompt}\nUser prompt: ${message}`,
       this.model(),
       this.apiKey()

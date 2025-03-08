@@ -1,4 +1,4 @@
-export const framework = `// signal.ts - signal implementation
+export const revolt = `// signal.ts - signal implementation
 const context = [];
 function signal(value) {
     const subscriptions = new Set();

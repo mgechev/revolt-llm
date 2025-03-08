@@ -11,7 +11,7 @@ export interface ResponseConfig {
   providedIn: "root",
 })
 export class ChatService {
-  sendMessage(message: string, model: string, apiKey: string): {
+  sendMessage(framework: string, message: string, model: string, apiKey: string): {
     code: Signal<string>;
     explanation: Signal<string>;
     promise: Promise<void>;

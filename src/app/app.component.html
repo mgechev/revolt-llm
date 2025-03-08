@@ -21,6 +21,7 @@
       </mat-tab>
       <mat-tab label="Preview">
         <app-preview
+          [framework]="framework()"
           [code]="code()"
           [pointerEvents]="dragging ? 'none' : 'auto'"
         />
