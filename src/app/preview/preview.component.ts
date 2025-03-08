@@ -67,8 +67,11 @@ const runReactApp = (
 
     frame.contentDocument.body.appendChild(appContainer);
     frame.contentDocument.body.appendChild(reactScript);
-    frame.contentDocument.body.appendChild(reactDOMScript);
     frame.contentDocument.body.appendChild(babelScript);
+    
+    reactScript.onload = () => {
+      frame.contentDocument!.body.appendChild(reactDOMScript);
+    };
 
     reactDOMScript.onload = () => {
       frame.contentDocument!.body.appendChild(appScript);
